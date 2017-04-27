@@ -23,7 +23,7 @@ public class SingleDate {
     private DateFormat df;
 
     public SingleDate(Date date, ArrayList<Double> data) {
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
         this.date = date;
         this.data = data;
@@ -45,7 +45,14 @@ public class SingleDate {
             endMessage += " | " + data.get(i).toString();
 
         }
-        return "Date : " + df.format(date) + endMessage;
+        try {
+            return "Date : " + df.format(date) + endMessage;
+
+        } catch (NullPointerException e) {
+            System.out.println("Error : " + e.getMessage());
+
+        }
+        return endMessage;
     }
 
 }

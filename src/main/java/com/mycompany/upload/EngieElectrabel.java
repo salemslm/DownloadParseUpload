@@ -120,14 +120,14 @@ public class EngieElectrabel {
                             
                             //nextRow.getCell(indexColumn).setCellType(CellType.NUMERIC);
                             tempNumber.add(getCellValue(c));
-                            System.out.println("Test " + getCellValue(c).toString());
+                           // System.out.println("Test "+indexColumn + " " + getCellValue(c).toString());
                             indexColumn++;
                         }
-                        System.out.println("***************Temp : ***************");
-                        tempNumber.stream().forEach((temp)->{
-                        System.out.println(temp);
-                    });
-                        System.out.println("***************");
+//                        System.out.println("***************Temp : ***************");
+//                        tempNumber.stream().forEach((temp)->{
+//                        System.out.println(temp);
+//                    });
+//                        System.out.println("***************");
                         completeFile.add(new SingleDate(d, tempNumber));
                         break;
                 }
