@@ -8,7 +8,6 @@ package com.mycompany.upload;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import static java.lang.Long.parseLong;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -16,9 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -39,7 +36,7 @@ public class NewMain {
     public static void main(String[] args) {
         // TODO code application logic here
 
-        ArrayList<SingleDate> completeFile = new ArrayList<SingleDate>();
+        ArrayList<SingleDate> completeFile = new ArrayList<>();
 
         // Use an InputStream, needs more memory
         try {
@@ -55,21 +52,34 @@ public class NewMain {
             // Show what is being read.
             System.out.println(cell.toString());
 
-            Iterator<Row> RowIterator = sheet.iterator();
+            Iterator<Row> rowIterator = sheet.iterator();
 
             //Get column names :
-            ArrayList<String> columnNames = new ArrayList<String>();
+            ArrayList<String> columnNames = new ArrayList<>();
             int index = 0;
 
-            while (RowIterator.hasNext()) {
+            Iterator it2 = new Iterator() {
+                @Override
+                public boolean hasNext() {
+                    return rowIterator.hasNext();
+                }
+
+                @Override
+                public Object next() {
+                    return "new string: " + rowIterator.next().toString();
+                }
+            };
+
+            while (it2.hasNext()) {
                 index++;
-                Row nextRow = RowIterator.next();
-                ArrayList<Long> dataForSingleTime = new ArrayList<Long>();
+                Row nextRow = rowIterator.next();
+                //System.out.println("Test bizarre : " + it2.next().toString());
+                ArrayList<Long> dataForSingleTime = new ArrayList<>();
 
                 NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
                 //NumberFormat.getInstance(Locale.FRANCE);
 
-                ArrayList<Long> tempNumber = new ArrayList<Long>();
+                ArrayList<Long> tempNumber = new ArrayList<>();
                 Number number = 0;
 
                 switch (index) {
@@ -93,9 +103,9 @@ public class NewMain {
                             indexColumn++;
                         }
 
-                        for (String temp : columnNames) {
+                        columnNames.stream().forEach((temp) -> {
                             System.out.println(temp);
-                        }
+                        });
                         break;
                     case 5:
                         //Role
@@ -127,7 +137,7 @@ public class NewMain {
                                 //Convert the Number type Long and add it to the list
                                 tempNumber.add(number.longValue());
                             } catch (ParseException e) {
-                                e.printStackTrace();
+                                e.getMessage();
                             }
 
                             indexColumn++;
@@ -138,9 +148,9 @@ public class NewMain {
                 }
 
             }
-            for (SingleDate temp : completeFile) {
+            completeFile.stream().forEach((temp) -> {
                 System.out.println(temp.toString());
-            }
+            });
 
         } catch (InvalidFormatException e) {
             System.out.println(e);
@@ -155,36 +165,23 @@ public class NewMain {
 
     private Stream<SingleDate> getListOfDatas() {
 
-        List l = null;
-
-        Iterator it1 = new Iterator<String>() {
-            int i = 0;
-
-            @Override
-            public boolean hasNext() {
-                return i < l.size();
-            }
-
-            @Override
-            public String next() {
-                i++;
-                return l.get(i).toString();
-            }
-        };
-
-        Iterator it2 = new Iterator() {
-            @Override
-            public boolean hasNext() {
-                return it1.hasNext();
-            }
-
-            @Override
-            public Object next() {
-                return "new string: " + it1.next();
-            }
-        };
-
-        ArrayList<SingleDate> completeFile = new ArrayList<SingleDate>();
+//        List l = null;
+//
+//        Iterator it1 = new Iterator<String>() {
+//            int i = 0;
+//
+//            @Override
+//            public boolean hasNext() {
+//                return i < l.size();
+//            }
+//
+//            @Override
+//            public String next() {
+//                i++;
+//                return l.get(i).toString();
+//            }
+//        };
+        ArrayList<SingleDate> completeFile = new ArrayList<>();
 
         return completeFile
                 .stream();
