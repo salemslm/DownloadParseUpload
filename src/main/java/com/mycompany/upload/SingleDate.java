@@ -17,9 +17,9 @@ import java.util.Map;
 public class SingleDate {
 
     private Date date;
-    private ArrayList<Long> data = new ArrayList<Long>();
+    private ArrayList<Double> data = new ArrayList<>();
 
-    public SingleDate(Date date, ArrayList<Long> data) {
+    public SingleDate(Date date, ArrayList<Double> data) {
         this.date = date;
         this.data = data;
     }
@@ -28,13 +28,17 @@ public class SingleDate {
         return date;
     }
 
-    public ArrayList<Long> getData() {
+    public ArrayList<Double> getData() {
         return data;
     }
     
     @Override
     public String toString() {
-        return "Date : " + date.toString() + ", number of columns : " + data.size();
+        String endMessage = " ";
+        for(int i = 0; i< data.size(); i++){
+            endMessage+= " | "+ data.get(i);
+        }
+        return "Date : " + date.toString() + endMessage;
     }
 
 }
