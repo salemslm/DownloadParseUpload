@@ -44,6 +44,7 @@ public class EngieElectrabel {
             Iterator<Row> rowIterator = sheet.iterator();
 
             ArrayList<Double> tempNumber = new ArrayList<>();
+            
             //Get column names :
             ArrayList<String> columnNames = new ArrayList<>();
             int index = 0;
@@ -119,19 +120,25 @@ public class EngieElectrabel {
                             
                             //nextRow.getCell(indexColumn).setCellType(CellType.NUMERIC);
                             tempNumber.add(getCellValue(c));
-                            System.out.println("Test" + getCellValue(c).toString());
-                            //System.out.println("Une autre cell " + nextRow.getCell(indexColumn).getNumericCellValue());
+                            System.out.println("Test " + getCellValue(c).toString());
                             indexColumn++;
                         }
+                        System.out.println("***************Temp : ***************");
+                        tempNumber.stream().forEach((temp)->{
+                        System.out.println(temp);
+                    });
+                        System.out.println("***************");
                         completeFile.add(new SingleDate(d, tempNumber));
-
                         break;
                 }
 
             }
-            completeFile.stream().forEach((temp) -> {
-                System.out.println(temp.toString());
-            });
+             for (SingleDate temp : completeFile) {
+                 System.out.println(temp.toString());
+             }
+//            completeFile.stream().forEach((temp) -> {
+//                System.out.println(temp.toString());
+//            });
 
         } catch (InvalidFormatException e) {
             System.out.println(e);

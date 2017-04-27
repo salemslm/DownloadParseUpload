@@ -5,6 +5,8 @@
  */
 package com.mycompany.upload;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,8 +20,11 @@ public class SingleDate {
 
     private Date date;
     private ArrayList<Double> data = new ArrayList<>();
+    private DateFormat df;
 
     public SingleDate(Date date, ArrayList<Double> data) {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
         this.date = date;
         this.data = data;
     }
@@ -31,14 +36,16 @@ public class SingleDate {
     public ArrayList<Double> getData() {
         return data;
     }
-    
+
     @Override
     public String toString() {
         String endMessage = " ";
-        for(int i = 0; i< data.size(); i++){
-            endMessage+= " | "+ data.get(i);
+
+        for (int i = 0; i < data.size(); i++) {
+            endMessage += " | " + data.get(i).toString();
+
         }
-        return "Date : " + date.toString() + endMessage;
+        return "Date : " + df.format(date) + endMessage;
     }
 
 }
