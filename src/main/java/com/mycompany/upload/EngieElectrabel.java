@@ -8,7 +8,6 @@ package com.mycompany.upload;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import static java.lang.String.format;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -20,8 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -120,14 +117,6 @@ public class EngieElectrabel {
                             System.out.println(e.getMessage());
                         }
 
-//                        while (nextRow.getCell(indexColumn) != null) {
-//                            Cell c = nextRow.getCell(indexColumn);
-//
-//                            //nextRow.getCell(indexColumn).setCellType(CellType.NUMERIC);
-//                            tempNumber.add(getCellValue(c));
-//                            // System.out.println("Test "+indexColumn + " " + getCellValue(c).toString());
-//                            indexColumn++;
-//                        }
 
                         while (nextRow.getCell(indexColumn) != null) {
 
@@ -144,11 +133,6 @@ public class EngieElectrabel {
                             indexColumn++;
                         }
 
-//                        System.out.println("***************Temp : ***************");
-//                        tempNumber.stream().forEach((temp)->{
-//                        System.out.println(temp);
-//                    });
-//                        System.out.println("***************");
                         completeFile.add(new SingleDate(d, tempNumber));
                         break;
                 }
@@ -157,9 +141,6 @@ public class EngieElectrabel {
             for (SingleDate temp : completeFile) {
                 System.out.println(temp.toString());
             }
-//            completeFile.stream().forEach((temp) -> {
-//                System.out.println(temp.toString());
-//            });
 
         } catch (InvalidFormatException e) {
             System.out.println(e);
@@ -170,34 +151,7 @@ public class EngieElectrabel {
         }
 
     }
+    
 
-    private Double getCellValue(Cell cell) {
-        //String val = "";
-        if (cell == null) {
-            return 0d;
-        }
-        // new SimpleDateFormat("yyyy-MM-dd").format(cell.getDateCellValue());
-        switch (cell.getCellTypeEnum()) {
-            case STRING:
-                System.out.println("C'est un string");
-                cell.setCellType(CellType.NUMERIC);
-                return cell.getNumericCellValue();
-            case NUMERIC:
-                //val = Double.toString(cell.getNumericCellValue());
-                // code derived from SpreadsheetTableRepeating.java
-//        double dphi = cell.getNumericCellValue();
-//        if ((dphi - (int) dphi) * 1000 == 0) {
-//            val = (int) dphi + "";
-//        }
-                //return val;
-                System.out.println("C'est un numeric");
-                return cell.getNumericCellValue();
-//    case BOOLEAN:
-//        return Double.parseDouble(cell.getBooleanCellValue()));
-//    case FORMULA:
-//        return cell.getCellFormula();
 
-        }
-        return 0d;
-    }
 }
