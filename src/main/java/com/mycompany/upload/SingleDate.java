@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -16,26 +17,33 @@ import java.util.Date;
  */
 public class SingleDate {
 
-    final private Date date;
-    final private ArrayList<Double> data;
+    private Date date = null;
+    private List<Double> data;
     final private DateFormat df;
 
-    public SingleDate(Date date, ArrayList<Double> data) {
+    public SingleDate(Date date, List<Double> dataa) {
         df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         System.out.println("***************Instanciation de SingleDate : ***************");
-        data.stream().forEach((temp) -> {
+        dataa.stream().forEach((temp) -> {
             System.out.print(" " + temp + " | ");
         });
         System.out.println("");
+        
         this.date = date;
-        this.data = data;
+        this.data = dataa;
+//        
+//        data.stream().forEach((temp) -> {
+//            System.out.print(" " + temp + " | ");
+//        });
+//        System.out.println("**************Instancié ***************");
+//        
     }
 
     public Date getDate() {
         return date;
     }
 
-    public ArrayList<Double> getData() {
+    public List<Double> getData() {
         return data;
     }
 
@@ -44,7 +52,7 @@ public class SingleDate {
         String endMessage = " ";
 
         for (int i = 0; i < data.size(); i++) {
-            endMessage += " | " + data.get(i).toString();
+            endMessage += " | " + String.valueOf(this.getData().get(i));
             //System.out.println("" + data.get(i).toString());
         }
         return "Date : " + df.format(date) + endMessage;
