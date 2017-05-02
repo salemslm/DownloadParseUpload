@@ -20,14 +20,15 @@ public class NewMain {
     public static void main(String[] args) {
 
         EngieElectrabel engie = new EngieElectrabel("Measured.xlsx");
+       
+        //engie.getValue(engie.)
 
     }
     // private ArrayList<String> 
 
     private Stream<SingleDate> getListOfDatas() {
 
-        ArrayList<SingleDate> completeFile = new ArrayList<>();
-
+        ArrayList<SingleDate> completeFile = new ArrayList<>(); 
         return completeFile
                 .stream();
 

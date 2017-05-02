@@ -28,28 +28,37 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
  *
  * @author Salem
  */
-public class EngieElectrabel {
+public class EngieElectrabel implements BillReader {
 
-    ArrayList<SingleDate> completeFile = new ArrayList<>();
+    private final String supplier = "ENGIE ELECTRABEL";
+    private Iterator<Row> entries;
+    private Date documentDate;
+    private String fileName;
+    private List<String> energyLabel;
 
-    public EngieElectrabel(String xlsxFile) {
+    Workbook workbook;
+    Sheet sheet;
+    List<SingleDate> completeFile = new ArrayList<>();
 
+    public EngieElectrabel(String fileName) {
+        this.fileName = fileName;
+
+        energyLabel = new ArrayList<>();
+        documentDate = new Date();
         // Use an InputStream, needs more memory
         try {
-            Workbook workbook = WorkbookFactory.create(new FileInputStream(xlsxFile));
+            workbook = WorkbookFactory.create(new FileInputStream(fileName));
 
             // Get the first sheet.
-            Sheet sheet = workbook.getSheetAt(0);
+            sheet = workbook.getSheetAt(0);
 
             Iterator<Row> rowIterator = sheet.iterator();
 
-            List<Double> tempNumber = new ArrayList<>();
-
+            List<Double> listValuesTemp;
             //Get column names :
-            List<String> columnNames = new ArrayList<>();
             int index = 0;
 
-            Iterator it2 = new Iterator() {
+            /* Iterator it2 = new Iterator() {
                 @Override
                 public boolean hasNext() {
                     return rowIterator.hasNext();
@@ -60,15 +69,13 @@ public class EngieElectrabel {
                     return "new string: " + rowIterator.next().toString();
                 }
             };
-
+             */
             while (rowIterator.hasNext()) {
                 index++;
                 Row nextRow = rowIterator.next();
 
-                //NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
-                //NumberFormat.getInstance(Locale.FRANCE);
-                tempNumber = new LinkedList<>();
-
+                NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
+                listValuesTemp = new LinkedList<>();
                 switch (index) {
                     case 1:
                         //Grey background colors cells : Nothing to do
@@ -85,11 +92,11 @@ public class EngieElectrabel {
                         //We don't take 1st column (indexColumn = 0)
                         int indexColumn = 1;
                         while (nextRow.getCell(indexColumn) != null) {
-                            columnNames.add(nextRow.getCell(indexColumn).getStringCellValue());
+                            energyLabel.add(nextRow.getCell(indexColumn).getStringCellValue());
                             indexColumn++;
                         }
 
-                        columnNames.stream().forEach((temp) -> {
+                        energyLabel.stream().forEach((temp) -> {
                             System.out.println(temp);
                         });
                         break;
@@ -103,20 +110,18 @@ public class EngieElectrabel {
                     default:
                         //Read Data
 
-                        //We don't take 1st column (indexColumn = 0)
                         indexColumn = 1;
                         Date d = null;
                         Number number = 0;
-                        NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
 
+
+                        listValuesTemp = new LinkedList<>();
                         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                         try {
-
                             d = df.parse(nextRow.getCell(0).toString());
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
                         }
-
 
                         while (nextRow.getCell(indexColumn) != null) {
 
@@ -125,7 +130,7 @@ public class EngieElectrabel {
                                 number = format.parse(nextRow.getCell(indexColumn).toString());
 
                                 //Convert the Number type double and add it to the list
-                                tempNumber.add(number.doubleValue());
+                                listValuesTemp.add(number.doubleValue());
                             } catch (ParseException e) {
                                 e.getMessage();
                             }
@@ -133,10 +138,9 @@ public class EngieElectrabel {
                             indexColumn++;
                         }
 
-                        completeFile.add(new SingleDate(d, tempNumber));
+                        completeFile.add(new SingleDate(d, listValuesTemp));
                         break;
                 }
-
             }
             for (SingleDate temp : completeFile) {
                 System.out.println(temp.toString());
@@ -151,7 +155,19 @@ public class EngieElectrabel {
         }
 
     }
-    
+
+    public Date getDocumentDate() {
+        return documentDate;
+    }
+
+    public Iterator<Row> getEntries() {
+        return entries;
+    }
+
+    public String getSupplier() {
+        return supplier;
+    }
+
 
 
 }
