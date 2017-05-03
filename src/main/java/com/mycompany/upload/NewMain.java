@@ -5,33 +5,24 @@
  */
 package com.mycompany.upload;
 
-import java.util.ArrayList;
-import java.util.stream.Stream;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 
 /**
  *
  * @author Salem
  */
+@SpringBootApplication
 public class NewMain {
-
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
-        EngieElectrabel engie = new EngieElectrabel("Measured.xlsx");
-       
-        //engie.getValue(engie.)
+        SpringApplication.run(NewMain.class, args);
 
     }
-    // private ArrayList<String> 
 
-    private Stream<SingleDate> getListOfDatas() {
 
-        ArrayList<SingleDate> completeFile = new ArrayList<>(); 
-        return completeFile
-                .stream();
-
-    }
 
 }

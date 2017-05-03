@@ -8,6 +8,7 @@ package com.mycompany.upload;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -18,6 +19,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -30,24 +32,15 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
  */
 public class EngieElectrabel implements BillReader {
 
-    private final String supplier = "ENGIE ELECTRABEL";
-    private Iterator<Row> entries;
-    private Date documentDate;
-    private String fileName;
-    private List<String> energyLabel;
+    @Override
+    public void read(InputStream _data, Consumer<SingleDate> _callback) {
 
-    Workbook workbook;
-    Sheet sheet;
-    List<SingleDate> completeFile = new ArrayList<>();
+        List<String> energyLabel = new LinkedList<>();
 
-    public EngieElectrabel(String fileName) {
-        this.fileName = fileName;
-
-        energyLabel = new ArrayList<>();
-        documentDate = new Date();
-        // Use an InputStream, needs more memory
+        Workbook workbook;
+        Sheet sheet;
         try {
-            workbook = WorkbookFactory.create(new FileInputStream(fileName));
+            workbook = WorkbookFactory.create(_data);
 
             // Get the first sheet.
             sheet = workbook.getSheetAt(0);
@@ -55,21 +48,9 @@ public class EngieElectrabel implements BillReader {
             Iterator<Row> rowIterator = sheet.iterator();
 
             List<Double> listValuesTemp;
-            //Get column names :
             int index = 0;
 
-            /* Iterator it2 = new Iterator() {
-                @Override
-                public boolean hasNext() {
-                    return rowIterator.hasNext();
-                }
-
-                @Override
-                public Object next() {
-                    return "new string: " + rowIterator.next().toString();
-                }
-            };
-             */
+ 
             while (rowIterator.hasNext()) {
                 index++;
                 Row nextRow = rowIterator.next();
@@ -114,7 +95,6 @@ public class EngieElectrabel implements BillReader {
                         Date d = null;
                         Number number = 0;
 
-
                         listValuesTemp = new LinkedList<>();
                         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                         try {
@@ -138,12 +118,9 @@ public class EngieElectrabel implements BillReader {
                             indexColumn++;
                         }
 
-                        completeFile.add(new SingleDate(d, listValuesTemp));
+                        _callback.accept(new SingleDate(d, listValuesTemp));
                         break;
                 }
-            }
-            for (SingleDate temp : completeFile) {
-                System.out.println(temp.toString());
             }
 
         } catch (InvalidFormatException e) {
@@ -153,21 +130,6 @@ public class EngieElectrabel implements BillReader {
         } catch (IOException e) {
             System.out.println(e);
         }
-
     }
-
-    public Date getDocumentDate() {
-        return documentDate;
-    }
-
-    public Iterator<Row> getEntries() {
-        return entries;
-    }
-
-    public String getSupplier() {
-        return supplier;
-    }
-
-
 
 }

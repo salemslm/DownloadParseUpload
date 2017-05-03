@@ -5,19 +5,14 @@
  */
 package com.mycompany.upload;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.poi.ss.usermodel.Row;
+import java.io.InputStream;
+import java.util.function.Consumer;
 
 /**
  *
  * @author Salem
  */
 public interface BillReader {
-    public Iterator<Row> getEntries();
-    public String getSupplier();
-    public Date getDocumentDate();
-    
+    public void read(InputStream _data, Consumer<SingleDate> _callback);   
     
 }
