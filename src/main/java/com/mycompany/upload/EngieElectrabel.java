@@ -5,7 +5,6 @@
  */
 package com.mycompany.upload;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +12,6 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -49,77 +47,68 @@ public class EngieElectrabel implements BillReader {
 
             List<Double> listValuesTemp;
             int index = 0;
+            Date d = null;
 
- 
             while (rowIterator.hasNext()) {
                 index++;
+                int indexColumn = 1;
+                Number numberTemp = 0;
+                listValuesTemp = new LinkedList<>();
+
                 Row nextRow = rowIterator.next();
 
                 NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
-                listValuesTemp = new LinkedList<>();
-                switch (index) {
-                    case 1:
-                        //Grey background colors cells : Nothing to do
-                        break;
-                    case 2:
-                        //EAN
-                        break;
-                    case 3:
-                        //Sub EAN
-                        break;
-                    case 4:
-                        //Role description
 
-                        //We don't take 1st column (indexColumn = 0)
-                        int indexColumn = 1;
-                        while (nextRow.getCell(indexColumn) != null) {
-                            energyLabel.add(nextRow.getCell(indexColumn).getStringCellValue());
-                            indexColumn++;
-                        }
+                try {
+                    //Read entries
+                    DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    d = df.parse(nextRow.getCell(0).toString());
 
-                        energyLabel.stream().forEach((temp) -> {
-                            System.out.println(temp);
-                        });
-                        break;
-                    case 5:
-                        //Role
+                    //System.out.println(e.getMessage());
+                    while (nextRow.getCell(indexColumn) != null) {
 
-                        break;
-                    case 6:
-                        //Profile Description
-                        break;
-                    default:
-                        //Read Data
-
-                        indexColumn = 1;
-                        Date d = null;
-                        Number number = 0;
-
-                        listValuesTemp = new LinkedList<>();
-                        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                         try {
-                            d = df.parse(nextRow.getCell(0).toString());
-                        } catch (Exception e) {
-                            System.out.println(e.getMessage());
+                            //Be able to read numbers with commas
+                            numberTemp = format.parse(nextRow.getCell(indexColumn).toString());
+
+                            //Convert the Number type double and add it to the list
+                            listValuesTemp.add(numberTemp.doubleValue());
+                        } catch (ParseException e) {
+                            e.getMessage();
                         }
 
-                        while (nextRow.getCell(indexColumn) != null) {
+                        indexColumn++;
+                    }
 
-                            try {
-                                //Be able to read numbers with commas
-                                number = format.parse(nextRow.getCell(indexColumn).toString());
+                    _callback.accept(new SingleDate(d, listValuesTemp));
 
-                                //Convert the Number type double and add it to the list
-                                listValuesTemp.add(number.doubleValue());
-                            } catch (ParseException e) {
-                                e.getMessage();
+                } catch (Exception e) {
+                    //This is not an entry.
+                    switch (nextRow.getCell(0).getStringCellValue()) {
+                        case "":
+                            break;
+                        case "EAN":
+                            break;
+                        case "Sub EAN":
+                            break;
+                        case "Role Description":
+                            indexColumn = 1;
+                            while (nextRow.getCell(indexColumn) != null) {
+                                energyLabel.add(nextRow.getCell(indexColumn).getStringCellValue());
+                                indexColumn++;
                             }
 
-                            indexColumn++;
-                        }
-
-                        _callback.accept(new SingleDate(d, listValuesTemp));
-                        break;
+                            energyLabel.stream().forEach((temp) -> {
+                                System.out.println(temp);
+                            });
+                            break;
+                        case "Role":
+                            break;
+                        case "Profile description (unit)":
+                            break;
+                        default:
+                            System.out.println("Don't know what is that line");
+                    }
                 }
             }
 
